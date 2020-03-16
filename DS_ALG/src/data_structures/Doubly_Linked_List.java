@@ -93,7 +93,105 @@ public class Doubly_Linked_List<T> implements Iterable<T>{
 		}
 	}
 	
-	//
+	//Remove the first value at the head of the linked list - O(1)
+	public T removeFirst() {
+		if(isEmpty()) throw new RuntimeException("EmptyList");
+		
+		T data = head.data;
+		head = head.next;
+		--size;
+		if(isEmpty()) tail=null;
+		else head.prev=null;
+		return data;
+	}
 	
+	//Remove the last element of the linked list - O(1)
+	public T removeLast() {
+		if(isEmpty()) throw new RuntimeException("EmptyList");
+		
+		T data = tail.data;
+		tail=tail.prev;
+		--size;
+		
+		if(isEmpty()) head=null;
+		else tail.next=null;
+		
+		return data;
+	}
 	
+	//Remove an arbitrary node from linked list
+	private T remove(Node<T> node) {
+		if(node.prev==null) removeFirst();
+		if(node.next==null) removeLast();
+		
+		node.next.prev=node.prev;
+		node.prev.next=node.next;
+		
+		T data=node.data;
+		node.data=null;
+		node=node.prev=node.next=null;
+		--size;
+		
+		return data;
+	}
+	
+	//Remove node at a particular index - O(n)
+	public void removeAt(int index) {
+		if(index<0||index>size) throw new IllegalArgumentException();
+		
+		int i;
+		Node<T> trav;
+		if(index<size/2) {
+			for(i=0,trav=head;i!=index;i++)
+				trav=trav.next;
+		}else {
+			for(i=size,trav=tail;i!=index;i--)
+				trav=trav.prev;
+		}
+		remove(trav);
+	}
+	
+	//Remove a particular value from linked list - O(n)
+	public boolean remove(Object obj) {
+		Node<T> trav=head;
+		if(obj==null) {
+			for(trav=head;trav!=null;trav=trav.next) {
+				if(trav.data==null) {
+					remove(trav);
+					return true;
+				}
+			}
+		}else {
+			for(trav=head;trav!=null;trav=trav.next) {
+				if(obj.equals(trav.data)) {
+					remove(trav);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	//Find the index of particular value in the linked list , O(n)
+	public int indexOf(Object obj) {
+		int index=0;
+		Node<T> trav=head;
+		if(obj==null) {
+		for(trav=head;trav!=null;trav=trav.next,index++) {
+			if(trav.data==null)
+				return index;
+		}
+		}else {
+		for(trav=head;trav!=null;trav=trav.next,index++) {
+			if(obj.equals(trav.data))
+				return index;
+		}
+		}
+		return -1;
+	}
+	
+	//Check if a value is contained in the list
+	public boolean contains(Object obj) {
+		return indexOf(obj) != -1;
+	}
 }
