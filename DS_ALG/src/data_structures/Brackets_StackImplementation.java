@@ -13,21 +13,31 @@ package data_structures;
 
 public class Brackets_StackImplementation {
 	
-	public boolean isValidBrackets(String[] args) {
+	public boolean isValidBrackets() {
 		Stack stack=new Stack();
 		String br=new String("[[{}]()]");
 		for(int i=0;i<br.length()-1;i++) {
-			char c=br.charAt(i);
-			if(c=='['||c=='{'||c=='(') {
+			String c=Character.toString(br.charAt(i));
+			if(c=="["||c=="{"||c=="(") {
 				stack.push(c);
 			}else {
 				if(stack.isEmpty()) return false;
 				else {
+					if(!stack.isEmpty()) {
 					String rev = getReveresedBracket(stack.peek().toString());
+					if(c.equals(rev))
+						stack.pop();
+					else
+						return false;
+					}else
+						return false;
 				}
 			}
 		}
-		return true;
+		if(stack.isEmpty())
+			return true;
+		else
+			return false;
 	}
 	
 	public String getReveresedBracket(String s) {
@@ -35,5 +45,14 @@ public class Brackets_StackImplementation {
 		if(s.equals("(")) return ")";
 		if(s.equals("[")) return "]";	
 		return "";
+	}
+	
+	public static void main(String[] args) {
+		Brackets_StackImplementation obj=new Brackets_StackImplementation();
+		boolean result= obj.isValidBrackets();
+		if(result)
+		System.out.println("Valid brackets");
+		else
+			System.out.println("Invalid brackets");
 	}
 }
